@@ -12,9 +12,11 @@
   "author": "pestov",
   "license": "MIT",
   "dependencies": {
+    "celebrate": "^15.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-winston": "^4.2.0",
+    "joi": "^17.13.3",
     "pg": "^8.13.1",
     "postgres": "^3.4.5",
     "winston": "^3.17.0"

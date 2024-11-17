@@ -1,9 +1,18 @@
 const router = require("express").Router();
-const stocksController = require("../controllers/stocksController");
+const {
+  increaseStock,
+  decreaseStock,
+  getStocks,
+  createStock,
+} = require("../controllers/stocksController");
+const {
+  createStockValidation,
+  toggleStockValidation,
+} = require("../middlewares/validate");
 
-router.post("/", stocksController.createStock);
-router.patch("/increase", stocksController.increaseStock);
-router.patch("/decrease", stocksController.decreaseStock);
-router.get("/", stocksController.getStocks);
+router.post("/", createStockValidation, createStock);
+router.patch("/increase", toggleStockValidation, increaseStock);
+router.patch("/decrease", toggleStockValidation, decreaseStock);
+router.get("/", getStocks);
 
 module.exports = router;

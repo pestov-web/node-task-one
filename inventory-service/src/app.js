@@ -2,6 +2,7 @@ const express = require("express");
 const productRoutes = require("./routes/products.js");
 const stockRoutes = require("./routes/stocks.js");
 const db = require("./db");
+const { errors } = require("celebrate");
 
 const { logger, errorLogger } = require("./middlewares/logger");
 
@@ -21,6 +22,8 @@ db.query("SELECT 1")
     console.error("Database connection error:", err);
     process.exit(1);
   });
+
+app.use(errors());
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
