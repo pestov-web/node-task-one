@@ -1,0 +1,19 @@
+{
+  "name": "history-service",
+  "version": "1.0.0b",
+  "description": "history-service",
+  "main": "app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "lint": "npx eslint src/**/*"
+  },
+  "keywords": [],
+  "author": "pestov",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "fastify": "^5.1.0",
+    "prisma": "^5.22.0"
+  }
+}

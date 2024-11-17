@@ -1,0 +1,16 @@
+# Указываем базовый образ Node.js
+FROM node:20-alpine
+
+# Устанавливаем рабочую директорию
+WORKDIR /inventory-service
+
+# Копируем package.json и устанавливаем зависимости
+COPY package*.json ./
+RUN npm install
+
+# Копируем весь код
+COPY . .
+
+# Указываем порт и команду запуска
+EXPOSE 3000
+CMD ["node", "src/app.js"]

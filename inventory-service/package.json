@@ -1,0 +1,22 @@
+{
+  "name": "inventory-service",
+  "version": "1.0.0b",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "lint": "npx eslint src/**/*"
+  },
+  "keywords": [],
+  "author": "pestov",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-winston": "^4.2.0",
+    "pg": "^8.13.1",
+    "postgres": "^3.4.5",
+    "winston": "^3.17.0"
+  }
+}
