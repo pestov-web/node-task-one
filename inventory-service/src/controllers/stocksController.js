@@ -1,7 +1,8 @@
 const StockModel = require("../models/stockModel");
 
-exports.createStock = async (req, res) => {
+exports.createStock = async (req, res, next) => {
   const { productId, shopId, shelfQuantity, orderQuantity } = req.body;
+
   try {
     const stock = await StockModel.create(
       productId,
@@ -9,39 +10,54 @@ exports.createStock = async (req, res) => {
       shelfQuantity,
       orderQuantity
     );
-    res.status(201).json(stock[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to create stock" });
-  }
-};
 
-exports.increaseStock = async (req, res) => {
-  const { stockId } = req.params;
-  const { quantity } = req.body;
-  try {
-    const stock = await StockModel.increase(stockId, quantity);
-    res.json(stock[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to increase stock quantity" });
-  }
-};
-
-exports.decreaseStock = async (req, res) => {
-  const { stockId } = req.params;
-  const { quantity } = req.body;
-  try {
-    const stock = await StockModel.decrease(stockId, quantity);
-    if (!stock.length) {
-      return res.status(400).json({ error: "Not enough stock to decrease" });
+    if (stock.length) {
+      return res.status(201).json({
+        status: "success",
+        message: "Stock created successfully",
+        data: stock[0],
+      });
     }
-    res.json(stock[0]);
+
+    res.status(400).json({
+      status: "error",
+      message: "Failed to create stock",
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to decrease stock quantity" });
+    next(error);
   }
 };
+
+const changeStock = async (req, res, next, operation) => {
+  const { productId, shopId, quantity } = req.body;
+
+  try {
+    const result =
+      operation === "increase"
+        ? await StockModel.increase(productId, shopId, quantity)
+        : await StockModel.decrease(productId, shopId, quantity);
+
+    if (result.length) {
+      return res.status(200).json({
+        status: "success",
+        message: `Stock ${operation}d successfully`,
+        data: result[0],
+      });
+    }
+
+    return res.status(404).json({
+      status: "error",
+      message: "Stock not found for this product and shop",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+exports.increaseStock = (req, res, next) =>
+  changeStock(req, res, next, "increase");
+
+exports.decreaseStock = (req, res, next) =>
+  changeStock(req, res, next, "decrease");
 
 exports.getStocks = async (req, res) => {
   const { plu, shopId, minShelf, maxShelf, minOrder, maxOrder } = req.query;

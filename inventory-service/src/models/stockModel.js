@@ -9,19 +9,27 @@ class StockModel {
     );
   }
 
-  static async increase(stockId, quantity) {
-    return db.query(
-      "UPDATE stocks SET shelf_quantity = shelf_quantity + $1 WHERE id = $2 RETURNING *",
-      [quantity, stockId]
+  static async updateStock(productId, shopId, quantity, operation) {
+    const operator = operation === "increase" ? "+" : "-";
+
+    const { rows } = await db.query(
+      `UPDATE
+         stocks
+       SET shelf_quantity = shelf_quantity ${operator} $1
+       WHERE product_id = $2 AND shop_id = $3
+       RETURNING *;`,
+      [quantity, productId, shopId]
     );
+
+    return rows;
   }
 
-  static async decrease(stockId, quantity) {
-    return db.query(
-      `UPDATE stocks SET shelf_quantity = shelf_quantity - $1
-       WHERE id = $2 AND shelf_quantity >= $1 RETURNING *`,
-      [quantity, stockId]
-    );
+  static async increase(productId, shopId, quantity) {
+    return await this.updateStock(productId, shopId, quantity, "increase");
+  }
+
+  static async decrease(productId, shopId, quantity) {
+    return await this.updateStock(productId, shopId, quantity, "decrease");
   }
 
   static async findByFilters(
