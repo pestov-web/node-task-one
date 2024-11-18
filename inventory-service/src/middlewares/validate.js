@@ -9,7 +9,7 @@ exports.createStockValidation = celebrate({
   }),
 });
 
-exports.toggleStockValidation = celebrate({
+exports.changeStockValidation = celebrate({
   [Segments.BODY]: Joi.object({
     productId: Joi.number().integer().positive().required(),
     shopId: Joi.number().integer().positive().required(),

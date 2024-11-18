@@ -59,7 +59,7 @@ exports.increaseStock = (req, res, next) =>
 exports.decreaseStock = (req, res, next) =>
   changeStock(req, res, next, "decrease");
 
-exports.getStocks = async (req, res) => {
+exports.getStocks = async (req, res, next) => {
   const { plu, shopId, minShelf, maxShelf, minOrder, maxOrder } = req.query;
   try {
     const stocks = await StockModel.findByFilters(
@@ -70,9 +70,12 @@ exports.getStocks = async (req, res) => {
       minOrder,
       maxOrder
     );
-    res.json(stocks);
+    res.status(200).json({
+      status: "success",
+      data: stocks,
+    });
+    console.log(stocks);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch stocks" });
+    next(error);
   }
 };

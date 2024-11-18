@@ -7,12 +7,12 @@ const {
 } = require("../controllers/stocksController");
 const {
   createStockValidation,
-  toggleStockValidation,
+  changeStockValidation,
 } = require("../middlewares/validate");
 
 router.post("/", createStockValidation, createStock);
-router.patch("/increase", toggleStockValidation, increaseStock);
-router.patch("/decrease", toggleStockValidation, decreaseStock);
+router.patch("/increase", changeStockValidation, increaseStock);
+router.patch("/decrease", changeStockValidation, decreaseStock);
 router.get("/", getStocks);
 
 module.exports = router;

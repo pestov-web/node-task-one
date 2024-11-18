@@ -2,11 +2,12 @@ const db = require("../db");
 
 class StockModel {
   static async create(productId, shopId, shelfQuantity = 0, orderQuantity = 0) {
-    return db.query(
+    const { rows } = await db.query(
       `INSERT INTO stocks (product_id, shop_id, shelf_quantity, order_quantity)
        VALUES ($1, $2, $3, $4) RETURNING *`,
       [productId, shopId, shelfQuantity, orderQuantity]
     );
+    return rows;
   }
 
   static async updateStock(productId, shopId, quantity, operation) {
@@ -40,7 +41,7 @@ class StockModel {
     minOrder,
     maxOrder
   ) {
-    return db.query(
+    const { rows } = await db.query(
       `SELECT s.*, p.plu, p.name
        FROM stocks s
        JOIN products p ON s.product_id = p.id
@@ -59,6 +60,7 @@ class StockModel {
         maxOrder || null,
       ]
     );
+    return rows;
   }
 }
 
