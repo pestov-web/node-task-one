@@ -2,9 +2,9 @@ const express = require("express");
 const productRoutes = require("./routes/products.js");
 const stockRoutes = require("./routes/stocks.js");
 const db = require("./db");
-const { errors } = require("celebrate");
-
 const { logger, errorLogger } = require("./middlewares/logger");
+const { errors } = require("celebrate");
+const errorsHandler = require("./middlewares/errorsHandler.js");
 
 const app = express();
 app.use(express.json());
@@ -23,7 +23,10 @@ db.query("SELECT 1")
     process.exit(1);
   });
 
+// Ошибки Celebrate
 app.use(errors());
+// Обработка ошибок
+app.use(errorsHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
