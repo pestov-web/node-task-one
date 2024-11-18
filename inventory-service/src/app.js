@@ -5,8 +5,28 @@ const db = require("./db");
 const { logger, errorLogger } = require("./middlewares/logger");
 const { errors } = require("celebrate");
 const errorsHandler = require("./middlewares/errorsHandler.js");
+const cors = require("cors");
+const helmet = require("helmet");
+
+const LEGAL_CORS = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3001",
+  "http://127.0.0.1",
+];
 
 const app = express();
+
+app.use(
+  cors({
+    origin: LEGAL_CORS,
+    credentials: true,
+  })
+);
+
+app.use(helmet());
+
 app.use(express.json());
 
 app.use("/products", productRoutes);
@@ -23,9 +43,8 @@ db.query("SELECT 1")
     process.exit(1);
   });
 
-// Ошибки Celebrate
-app.use(errors());
 // Обработка ошибок
+app.use(errors()); // Celebrate
 app.use(errorsHandler);
 
 const PORT = process.env.PORT || 3000;
