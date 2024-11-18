@@ -8,7 +8,7 @@ const errorsHandler = require("./middlewares/errorsHandler.js");
 const cors = require("cors");
 const helmet = require("helmet");
 const limiter = require("./middlewares/rateLimitter");
-
+const { connectRabbitMQ } = require("./rabbitmqClient");
 const LEGAL_CORS = [
   "http://localhost:3000",
   "http://localhost:3001",
@@ -36,6 +36,8 @@ app.use(express.json());
 app.use("/products", productRoutes);
 app.use("/stocks", stockRoutes);
 
+connectRabbitMQ();
+
 app.use(logger);
 app.use(errorLogger);
 
@@ -51,7 +53,7 @@ db.query("SELECT 1")
 app.use(errors()); // Celebrate
 app.use(errorsHandler);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3010;
 app.listen(PORT, () => {
   console.log(`Inventory service running on port ${PORT}`);
 });

@@ -12,7 +12,7 @@
   "author": "pestov",
   "license": "MIT",
   "dependencies": {
-    "@prisma/client": "^5.22.0",
+    "amqplib": "^0.10.4",
     "celebrate": "^15.0.3",
     "cors": "^2.8.5",
     "express": "^4.21.1",
@@ -22,9 +22,5 @@
     "prisma": "^5.22.0",
     "winston": "^3.17.0"
   },
-  "devDependencies": {
-    "@types/express": "^5.0.0",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.6.3"
-  }
+  "devDependencies": {}
 }

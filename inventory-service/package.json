@@ -12,6 +12,7 @@
   "author": "pestov",
   "license": "MIT",
   "dependencies": {
+    "amqplib": "^0.10.4",
     "celebrate": "^15.0.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

@@ -4,31 +4,48 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: shop_db
+      PPOSTGRES_MULTIPLE_DATABASES: "shop_db,history_db"
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./init_schema.sql:/docker-entrypoint-initdb.d/init_schema.sql
+      - ./seed_shop.sql:/docker-entrypoint-initdb.d/seed_shop.sql
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    logging:
+      driver: "none" # Отключаем логирование в Docker
 
   inventory-service:
-    build:
-      context: ./history-service
+    build: ./inventory-service
     ports:
-      - "3000:3000"
+      - "3010:3010"
     environment:
       DATABASE_URL: postgres://user:password@postgres:5432/shop_db
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
     depends_on:
       - postgres
+      - rabbitmq
 
   history-service:
     build: ./history-service
     ports:
-      - "3001:3001"
+      - "3011:3011"
     environment:
       DATABASE_URL: postgres://user:password@postgres:5432/history_db
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
     depends_on:
       - postgres
+      - rabbitmq
     volumes:
       - ./prisma:/app/prisma
+
 volumes:
   postgres_data:

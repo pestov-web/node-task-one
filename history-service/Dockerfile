@@ -1,22 +1,23 @@
+# Указываем базовый образ Node.js
 FROM node:20-alpine
 
-# Устанавливаем рабочую директорию для сервиса
+# Устанавливаем рабочую директорию
 WORKDIR /history-service
 
-# Копируем package.json и package-lock.json для установки зависимостей
+# Копируем package.json и устанавливаем зависимости
 COPY package*.json ./
-
-# Устанавливаем зависимости
 RUN npm install
 
-# Копируем остальные файлы проекта
+# Копируем весь код
 COPY . .
 
-# Собираем проект (если у вас есть процесс сборки)
-RUN npm run build
+# Устанавливаем netcat
+RUN apk add --no-cache netcat-openbsd
 
-# Открываем порт 3011
+# Указываем порт и команду запуска
 EXPOSE 3011
 
-# Запускаем сервис
-CMD ["sh", "-c", "npx prisma migrate deploy && node prisma/seed.js && npm start"]
+# CMD ["node", "src/app.js"]
+
+# Скрипт ожидания RabbitMQ с использованием nc
+CMD while ! nc -z rabbitmq 5672; do sleep 1; done && node src/app.js
