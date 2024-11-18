@@ -7,7 +7,7 @@ const { errors } = require("celebrate");
 const errorsHandler = require("./middlewares/errorsHandler.js");
 const cors = require("cors");
 const helmet = require("helmet");
-const rateLimitter = require("./middlewares/rateLimitter");
+const limiter = require("./middlewares/rateLimitter");
 
 const LEGAL_CORS = [
   "http://localhost:3000",
@@ -28,7 +28,8 @@ app.use(
 
 app.use(helmet());
 
-app.use(rateLimitter);
+//rate limiter
+app.use(limiter);
 
 app.use(express.json());
 
