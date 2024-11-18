@@ -3,8 +3,12 @@ const {
   createProduct,
   getProducts,
 } = require("../controllers/productsController");
+const {
+  createProductValidation,
+  getProductValidation,
+} = require("../middlewares/productValidation");
 
-router.post("/", createProduct);
-router.get("/", getProducts);
+router.post("/", createProductValidation, createProduct);
+router.get("/", getProductValidation, getProducts);
 
 module.exports = router;
