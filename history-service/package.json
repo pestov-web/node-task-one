@@ -1,6 +1,6 @@
 {
   "name": "history-service",
-  "version": "1.0.0b",
+  "version": "1.0.1b",
   "description": "history-service",
   "main": "dist/server.js",
   "scripts": {
