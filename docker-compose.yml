@@ -11,7 +11,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   inventory-service:
-    build: ./inventory-service
+    build:
+      context: ./history-service
     ports:
       - "3000:3000"
     environment:
@@ -24,9 +25,10 @@ services:
     ports:
       - "3001:3001"
     environment:
-      DATABASE_URL: postgres://user:password@postgres:5432/shop_db
+      DATABASE_URL: postgres://user:password@postgres:5432/history_db
     depends_on:
       - postgres
-
+    volumes:
+      - ./prisma:/app/prisma
 volumes:
   postgres_data:

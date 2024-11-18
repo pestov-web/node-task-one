@@ -2,11 +2,11 @@
   "name": "history-service",
   "version": "1.0.0b",
   "description": "history-service",
-  "main": "app.js",
+  "main": "dist/server.js",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
-    "lint": "npx eslint src/**/*"
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev src/server.ts"
   },
   "keywords": [],
   "author": "pestov",
@@ -21,5 +21,10 @@
     "helmet": "^8.0.0",
     "prisma": "^5.22.0",
     "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.3"
   }
 }
