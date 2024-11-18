@@ -8,11 +8,12 @@ const {
 const {
   createStockValidation,
   changeStockValidation,
+  getStocksValidation,
 } = require("../middlewares/validate");
 
 router.post("/", createStockValidation, createStock);
 router.patch("/increase", changeStockValidation, increaseStock);
 router.patch("/decrease", changeStockValidation, decreaseStock);
-router.get("/", getStocks);
+router.get("/", getStocksValidation, getStocks);
 
 module.exports = router;
