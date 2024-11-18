@@ -4,10 +4,20 @@ exports.createProduct = async (req, res) => {
   const { plu, name } = req.body;
   try {
     const product = await ProductModel.create(plu, name);
-    res.status(201).json(product[0]);
+    if (product.length) {
+      return res.status(201).json({
+        status: "success",
+        message: "Product created successfully",
+        data: product[0],
+      });
+    }
+
+    res.status(400).json({
+      status: "error",
+      message: "Failed to create product",
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to create product" });
+    next(error);
   }
 };
 
@@ -15,9 +25,11 @@ exports.getProducts = async (req, res) => {
   const { name, plu } = req.query;
   try {
     const products = await ProductModel.findByFilters(name, plu);
-    res.json(products);
+    res.status(200).json({
+      status: "success",
+      data: products,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch products" });
+    next(error);
   }
 };
