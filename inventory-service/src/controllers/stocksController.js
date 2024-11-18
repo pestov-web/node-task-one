@@ -74,7 +74,6 @@ exports.getStocks = async (req, res, next) => {
       status: "success",
       data: stocks,
     });
-    console.log(stocks);
   } catch (error) {
     next(error);
   }
