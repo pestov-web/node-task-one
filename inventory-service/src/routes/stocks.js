@@ -9,7 +9,7 @@ const {
   createStockValidation,
   changeStockValidation,
   getStocksValidation,
-} = require("../middlewares/validate");
+} = require("../middlewares/stockValidation");
 
 router.post("/", createStockValidation, createStock);
 router.patch("/increase", changeStockValidation, increaseStock);
