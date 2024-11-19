@@ -11,11 +11,14 @@ RUN npm install
 # Копируем остальной код приложения
 COPY . .
 
+# Устанавливаем netcat
+RUN apk add --no-cache netcat-openbsd
+
 # Собираем приложение
 RUN npm run build
 
 # Открываем порт сервиса
 EXPOSE 3012
 
-# Запускаем приложение
-CMD ["npm", "run", "start:prod"]
+# Скрипт ожидания RabbitMQ с использованием nc
+CMD while ! nc -z rabbitmq 5672; do sleep 1; done && npm run start:prod
