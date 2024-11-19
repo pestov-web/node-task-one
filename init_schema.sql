@@ -37,3 +37,15 @@ CREATE TABLE IF NOT EXISTS history (
     quantity INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+\c users_db
+
+-- Создание таблицы пользователей в базе данных users_db
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    age INTEGER NOT NULL,
+    gender VARCHAR(10) CHECK (gender IN ('male', 'female')) NOT NULL,
+    has_issues BOOLEAN DEFAULT false
+);

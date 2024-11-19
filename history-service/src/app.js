@@ -1,7 +1,7 @@
 const express = require("express");
 const historyRoutes = require("./routes/historyRoutes");
 const db = require("./db");
-const { startConsumer } = require("./rabbitmqClient");
+const { startConsumer } = require("./services/rabbitmqClient");
 const { logger, errorLogger } = require("./middlewares/logger");
 const { errors } = require("celebrate");
 const errorsHandler = require("./middlewares/errorsHandler");

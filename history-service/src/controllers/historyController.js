@@ -1,38 +1,33 @@
 const HistoryModel = require("../models/historyModel");
+
 exports.getHistory = async (req, res, next) => {
-  const { plu, shopId, dateFrom, dateTo, action } = req.query;
   try {
-    const history = await HistoryModel.findByFilters(
-      plu,
+    const {
       shopId,
-      dateFrom,
-      dateTo,
-      action
-    );
+      plu,
+      action,
+      startDate,
+      endDate,
+      page = 1,
+      limit = 10,
+    } = req.query;
+
+    const { data, total } = await HistoryModel.getHistory({
+      shopId,
+      plu,
+      action,
+      startDate,
+      endDate,
+      page: parseInt(page, 10),
+      limit: parseInt(limit, 10),
+    });
+
     res.status(200).json({
       status: "success",
-      data: history,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-exports.createHistory = async (req, res, next) => {
-  const { plu, shopId, date, action } = req.body;
-
-  try {
-    const history = await HistoryModel.create(plu, shopId, date, action);
-    if (stock.length) {
-      return res.status(201).json({
-        status: "success",
-        message: "History created successfully",
-        data: history[0],
-      });
-    }
-
-    res.status(400).json({
-      status: "error",
-      message: "Failed to create history",
+      total, // Общее количество записей
+      page: parseInt(page, 10),
+      limit: parseInt(limit, 10),
+      data,
     });
   } catch (error) {
     next(error);
