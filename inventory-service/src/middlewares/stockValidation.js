@@ -17,5 +17,7 @@ exports.getStocksValidation = celebrate({
     maxShelf: Joi.number().integer().min(0),
     minOrder: Joi.number().integer().min(0),
     maxOrder: Joi.number().integer().min(0),
+    page: Joi.number().integer().min(1),
+    limit: Joi.number().integer().min(1),
   }),
 });

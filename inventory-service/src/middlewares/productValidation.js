@@ -11,5 +11,7 @@ exports.getProductValidation = celebrate({
   [Segments.QUERY]: Joi.object({
     name: Joi.string(),
     plu: Joi.string(),
+    page: Joi.number().integer().min(1),
+    limit: Joi.number().integer().min(1),
   }),
 });

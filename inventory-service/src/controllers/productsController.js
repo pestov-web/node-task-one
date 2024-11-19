@@ -27,12 +27,20 @@ exports.createProduct = async (req, res, next) => {
 };
 
 exports.getProducts = async (req, res) => {
-  const { name, plu } = req.query;
+  const { name, plu, page = 1, limit = 10 } = req.query;
   try {
-    const products = await ProductModel.findByFilters(name, plu);
+    const { data, total } = await ProductModel.findByFilters({
+      name,
+      plu,
+      page: parseInt(page, 10),
+      limit: parseInt(limit, 10),
+    });
     res.status(200).json({
       status: "success",
-      data: products,
+      total,
+      page: parseInt(page, 10),
+      limit: parseInt(limit, 10),
+      data,
     });
   } catch (error) {
     next(error);

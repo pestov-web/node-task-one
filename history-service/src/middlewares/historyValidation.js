@@ -7,5 +7,7 @@ exports.historyValidation = celebrate({
     action: Joi.string(),
     startDate: Joi.date(),
     endDate: Joi.date(),
+    page: Joi.number().integer().min(1),
+    limit: Joi.number().integer().min(1),
   }),
 });

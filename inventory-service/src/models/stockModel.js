@@ -53,34 +53,58 @@ class StockModel {
     );
   }
 
-  static async findByFilters(
-    plu,
-    shopId,
-    minShelf,
-    maxShelf,
-    minOrder,
-    maxOrder
-  ) {
-    const { rows } = await db.query(
-      `SELECT s.*, p.plu, p.name
-       FROM stocks s
-       JOIN products p ON s.plu = p.plu 
-       WHERE ($1::text IS NULL OR p.plu = $1)
-         AND ($2::int IS NULL OR s.shop_id = $2)
-         AND ($3::int IS NULL OR s.shelf_quantity >= $3)
-         AND ($4::int IS NULL OR s.shelf_quantity <= $4)
-         AND ($5::int IS NULL OR s.order_quantity >= $5)
-         AND ($6::int IS NULL OR s.order_quantity <= $6)`,
-      [
-        plu || null,
-        shopId || null,
-        minShelf !== undefined ? minShelf : null,
-        maxShelf !== undefined ? maxShelf : null,
-        minOrder !== undefined ? minOrder : null,
-        maxOrder !== undefined ? maxOrder : null,
-      ]
+  static async findByFilters(filters) {
+    const { plu, shopId, minShelf, maxShelf, minOrder, maxOrder, page, limit } =
+      filters;
+    const offset = (page - 1) * limit;
+
+    const query = `
+      SELECT s.*, p.plu, p.name
+      FROM stocks s
+      JOIN products p ON s.plu = p.plu 
+      WHERE ($1::text IS NULL OR p.plu = $1)
+        AND ($2::int IS NULL OR s.shop_id = $2)
+        AND ($3::int IS NULL OR s.shelf_quantity >= $3)
+        AND ($4::int IS NULL OR s.shelf_quantity <= $4)
+        AND ($5::int IS NULL OR s.order_quantity >= $5)
+        AND ($6::int IS NULL OR s.order_quantity <= $6)
+      ORDER BY p.name ASC, s.shop_id ASC
+      LIMIT $7 OFFSET $8
+    `;
+
+    const countQuery = `
+      SELECT COUNT(*)
+      FROM stocks s
+      JOIN products p ON s.plu = p.plu 
+      WHERE ($1::text IS NULL OR p.plu = $1)
+        AND ($2::int IS NULL OR s.shop_id = $2)
+        AND ($3::int IS NULL OR s.shelf_quantity >= $3)
+        AND ($4::int IS NULL OR s.shelf_quantity <= $4)
+        AND ($5::int IS NULL OR s.order_quantity >= $5)
+        AND ($6::int IS NULL OR s.order_quantity <= $6)
+    `;
+
+    const queryParams = [
+      plu || null,
+      shopId || null,
+      minShelf !== undefined ? minShelf : null,
+      maxShelf !== undefined ? maxShelf : null,
+      minOrder !== undefined ? minOrder : null,
+      maxOrder !== undefined ? maxOrder : null,
+      limit,
+      offset,
+    ];
+
+    const { rows } = await db.query(query, queryParams);
+    const { rows: countRows } = await db.query(
+      countQuery,
+      queryParams.slice(0, 6)
     );
-    return rows;
+
+    return {
+      data: rows,
+      total: parseInt(countRows[0].count, 10),
+    };
   }
 }
 

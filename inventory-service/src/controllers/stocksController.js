@@ -73,19 +73,33 @@ exports.decreaseStock = (req, res, next) =>
   changeStock(req, res, next, "decrease");
 
 exports.getStocks = async (req, res, next) => {
-  const { plu, shopId, minShelf, maxShelf, minOrder, maxOrder } = req.query;
+  const {
+    plu,
+    shopId,
+    minShelf,
+    maxShelf,
+    minOrder,
+    maxOrder,
+    page = 1,
+    limit = 10,
+  } = req.query;
   try {
-    const stocks = await StockModel.findByFilters(
+    const { data, total } = await StockModel.findByFilters({
       plu,
       shopId,
       minShelf,
       maxShelf,
       minOrder,
-      maxOrder
-    );
+      maxOrder,
+      page: parseInt(page, 10),
+      limit: parseInt(limit, 10),
+    });
     res.status(200).json({
       status: "success",
-      data: stocks,
+      total,
+      page: parseInt(page, 10),
+      limit: parseInt(limit, 10),
+      data,
     });
   } catch (error) {
     next(error);
