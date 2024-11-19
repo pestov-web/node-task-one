@@ -1,4 +1,3 @@
-// src/migrations/seedUsers.ts
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class SeedUsersMigration implements MigrationInterface {
