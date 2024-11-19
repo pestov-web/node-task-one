@@ -1,3 +1,8 @@
+-- DROP DATABASE shop_db; 
+-- DROP DATABASE history_db; 
+-- DROP DATABASE users_db;
+
+
 -- Создание баз данных
 CREATE DATABASE shop_db;
 CREATE DATABASE history_db;
@@ -16,14 +21,13 @@ CREATE TABLE IF NOT EXISTS products (
     plu VARCHAR(50) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL
 );
-
 CREATE TABLE IF NOT EXISTS stocks (
     id SERIAL PRIMARY KEY,
-    product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
+    plu VARCHAR(50) REFERENCES products(plu) ON DELETE CASCADE,
     shop_id INTEGER REFERENCES shops(id) ON DELETE CASCADE,
     shelf_quantity INTEGER DEFAULT 0,
     order_quantity INTEGER DEFAULT 0,
-    UNIQUE (product_id, shop_id)
+    UNIQUE (plu, shop_id)
 );
 
 \c history_db
@@ -31,10 +35,11 @@ CREATE TABLE IF NOT EXISTS stocks (
 -- Создание таблицы истории в базе данных history_db
 CREATE TABLE IF NOT EXISTS history (
     id SERIAL PRIMARY KEY,
-    product_id INTEGER,
-    shop_id INTEGER,
+    plu VARCHAR(50) NOT NULL,
+    shop_id INTEGER DEFAULT 0,
     action VARCHAR(50) NOT NULL,
-    quantity INTEGER NOT NULL,
+    shelf_quantity INTEGER DEFAULT 0,
+    order_quantity INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

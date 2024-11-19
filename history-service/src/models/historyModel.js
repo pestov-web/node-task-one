@@ -1,3 +1,4 @@
+const db = require("../db");
 class HistoryModel {
   static async getHistory(filters) {
     const { shopId, plu, action, startDate, endDate, page, limit } = filters;
@@ -7,7 +8,7 @@ class HistoryModel {
     const query = `
       SELECT * FROM history
       WHERE ($1::integer IS NULL OR shop_id = $1)
-        AND ($2::integer IS NULL OR product_id = $2)
+        AND ($2::text IS NULL OR plu = $2)
         AND ($3::text IS NULL OR action = $3)
         AND ($4::timestamp IS NULL OR created_at >= $4)
         AND ($5::timestamp IS NULL OR created_at <= $5)
@@ -18,7 +19,7 @@ class HistoryModel {
     const countQuery = `
       SELECT COUNT(*) FROM history
       WHERE ($1::integer IS NULL OR shop_id = $1)
-        AND ($2::integer IS NULL OR product_id = $2)
+        AND ($2::text IS NULL OR plu = $2)
         AND ($3::text IS NULL OR action = $3)
         AND ($4::timestamp IS NULL OR created_at >= $4)
         AND ($5::timestamp IS NULL OR created_at <= $5)

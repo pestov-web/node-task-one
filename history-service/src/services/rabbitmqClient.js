@@ -9,33 +9,30 @@ async function startConsumer() {
     const channel = await connection.createChannel();
 
     await channel.assertQueue(QUEUE_NAME, { durable: true });
-    console.log(
-      ` [*] Waiting for messages in ${QUEUE_NAME}. Press CTRL+C to exit.`
-    );
+    console.log(`Waiting for messages in ${QUEUE_NAME}.`);
 
     channel.consume(
       QUEUE_NAME,
       async (msg) => {
         if (msg !== null) {
           const messageContent = msg.content.toString();
-          console.log(` [x] Received message: ${messageContent}`);
+          console.log(`Received message: ${messageContent}`);
 
           try {
             const parsedData = JSON.parse(messageContent);
 
             // Сохранение в базу данных
             await saveToHistory({
-              productId: parsedData.productId,
+              plu: parsedData.plu,
               shopId: parsedData.shopId,
               action: parsedData.action,
-              quantity: parsedData.quantity,
+              shelfQuantity: parsedData.shelfQuantity,
+              orderQuantity: parsedData.orderQuantity,
             });
 
-            // Подтверждение обработки сообщения
             channel.ack(msg);
           } catch (err) {
             console.error("Error processing message:", err);
-            // Здесь можно решить, нужно ли подтверждать сообщение или оставить его в очереди
           }
         }
       },

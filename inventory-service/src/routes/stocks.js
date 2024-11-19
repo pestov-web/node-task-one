@@ -6,14 +6,13 @@ const {
   createStock,
 } = require("../controllers/stocksController");
 const {
-  createStockValidation,
-  changeStockValidation,
+  stockValidation,
   getStocksValidation,
 } = require("../middlewares/stockValidation");
 
-router.post("/", createStockValidation, createStock);
-router.patch("/increase", changeStockValidation, increaseStock);
-router.patch("/decrease", changeStockValidation, decreaseStock);
+router.post("/", stockValidation, createStock);
+router.patch("/increase", stockValidation, increaseStock);
+router.patch("/decrease", stockValidation, decreaseStock);
 router.get("/", getStocksValidation, getStocks);
 
 module.exports = router;

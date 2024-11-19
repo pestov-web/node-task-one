@@ -1,9 +1,14 @@
 const ProductModel = require("../models/productModel");
+const { sendMessage } = require("../rabbitmqClient");
 
-exports.createProduct = async (req, res) => {
+exports.createProduct = async (req, res, next) => {
   const { plu, name } = req.body;
   try {
     const product = await ProductModel.create(plu, name);
+    await sendMessage({
+      plu: product[0].plu,
+      action: "Product created",
+    });
     if (product.length) {
       return res.status(201).json({
         status: "success",

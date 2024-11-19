@@ -2,15 +2,22 @@ const StockModel = require("../models/stockModel");
 const { sendMessage } = require("../rabbitmqClient");
 
 exports.createStock = async (req, res, next) => {
-  const { productId, shopId, shelfQuantity, orderQuantity } = req.body;
+  const { plu, shopId, shelfQuantity, orderQuantity } = req.body;
 
   try {
     const stock = await StockModel.create(
-      productId,
+      plu,
       shopId,
       shelfQuantity,
       orderQuantity
     );
+    await sendMessage({
+      plu,
+      shopId,
+      action: "Stock created",
+      shelfQuantity,
+      orderQuantity,
+    });
     if (stock.length) {
       return res.status(201).json({
         status: "success",
@@ -29,14 +36,20 @@ exports.createStock = async (req, res, next) => {
 };
 
 const changeStock = async (req, res, next, operation) => {
-  const { productId, shopId, quantity } = req.body;
+  const { plu, shopId, shelfQuantity, orderQuantity } = req.body;
 
   try {
     const result =
       operation === "increase"
-        ? await StockModel.increase(productId, shopId, quantity)
-        : await StockModel.decrease(productId, shopId, quantity);
-    await sendMessage({ productId, shopId, action: operation, quantity });
+        ? await StockModel.increase(plu, shopId, shelfQuantity, orderQuantity)
+        : await StockModel.decrease(plu, shopId, shelfQuantity, orderQuantity);
+    await sendMessage({
+      plu,
+      shopId,
+      action: `Stock ${operation}d`,
+      shelfQuantity,
+      orderQuantity,
+    });
     if (result.length) {
       return res.status(200).json({
         status: "success",

@@ -1,10 +1,11 @@
 const { celebrate, Joi, Segments } = require("celebrate");
 
-exports.createHistoryValidation = celebrate({
-  [Segments.BODY]: Joi.object({
-    shopId: Joi.number().integer().positive().required(),
-    plu: Joi.string().required(),
-    date: Joi.date().required(),
-    action: Joi.string().required(),
+exports.historyValidation = celebrate({
+  [Segments.QUERY]: Joi.object({
+    shopId: Joi.number().integer().positive(),
+    plu: Joi.string(),
+    action: Joi.string(),
+    startDate: Joi.date(),
+    endDate: Joi.date(),
   }),
 });

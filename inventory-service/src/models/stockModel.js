@@ -1,36 +1,56 @@
 const db = require("../db");
 
 class StockModel {
-  static async create(productId, shopId, shelfQuantity = 0, orderQuantity = 0) {
+  static async create(plu, shopId, shelfQuantity = 0, orderQuantity = 0) {
     const { rows } = await db.query(
-      `INSERT INTO stocks (product_id, shop_id, shelf_quantity, order_quantity)
+      `INSERT INTO stocks (plu, shop_id, shelf_quantity, order_quantity)
        VALUES ($1, $2, $3, $4) RETURNING *`,
-      [productId, shopId, shelfQuantity, orderQuantity]
+      [plu, shopId, shelfQuantity, orderQuantity]
     );
     return rows;
   }
 
-  static async updateStock(productId, shopId, quantity, operation) {
+  static async updateStock(
+    plu,
+    shopId,
+    shelfQuantity,
+    orderQuantity,
+    operation
+  ) {
     const operator = operation === "increase" ? "+" : "-";
 
     const { rows } = await db.query(
       `UPDATE
          stocks
-       SET shelf_quantity = shelf_quantity ${operator} $1
-       WHERE product_id = $2 AND shop_id = $3
+       SET 
+         shelf_quantity = GREATEST(shelf_quantity ${operator} $3, 0), 
+         order_quantity = GREATEST(order_quantity ${operator} $4, 0)
+       WHERE plu = $1 AND shop_id = $2
        RETURNING *;`,
-      [quantity, productId, shopId]
+      [plu, shopId, shelfQuantity, orderQuantity]
     );
 
     return rows;
   }
 
-  static async increase(productId, shopId, quantity) {
-    return await this.updateStock(productId, shopId, quantity, "increase");
+  static async increase(plu, shopId, shelfQuantity, orderQuantity) {
+    return await this.updateStock(
+      plu,
+      shopId,
+      shelfQuantity,
+      orderQuantity,
+      "increase"
+    );
   }
 
-  static async decrease(productId, shopId, quantity) {
-    return await this.updateStock(productId, shopId, quantity, "decrease");
+  static async decrease(plu, shopId, shelfQuantity, orderQuantity) {
+    return await this.updateStock(
+      plu,
+      shopId,
+      shelfQuantity,
+      orderQuantity,
+      "decrease"
+    );
   }
 
   static async findByFilters(
@@ -44,7 +64,7 @@ class StockModel {
     const { rows } = await db.query(
       `SELECT s.*, p.plu, p.name
        FROM stocks s
-       JOIN products p ON s.product_id = p.id
+       JOIN products p ON s.plu = p.plu 
        WHERE ($1::text IS NULL OR p.plu = $1)
          AND ($2::int IS NULL OR s.shop_id = $2)
          AND ($3::int IS NULL OR s.shelf_quantity >= $3)
@@ -54,10 +74,10 @@ class StockModel {
       [
         plu || null,
         shopId || null,
-        minShelf || null,
-        maxShelf || null,
-        minOrder || null,
-        maxOrder || null,
+        minShelf !== undefined ? minShelf : null,
+        maxShelf !== undefined ? maxShelf : null,
+        minOrder !== undefined ? minOrder : null,
+        maxOrder !== undefined ? maxOrder : null,
       ]
     );
     return rows;
