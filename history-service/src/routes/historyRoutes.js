@@ -1,8 +1,11 @@
 const router = require("express").Router();
-import { createHistory, getHistory } from "../controllers/historyController";
-import { createHistoryValidation } from "../middlewares/historyValidation";
+const {
+  createHistory,
+  getHistory,
+} = require("../controllers/historyController");
+const createHistoryValidation = require("../middlewares/historyValidation");
 
-router.post("/", createHistoryValidation, createHistory);
+router.post("/", createHistory);
 router.get("/", getHistory);
 
-export default router;
+module.exports = router;

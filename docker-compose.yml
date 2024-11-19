@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      PPOSTGRES_MULTIPLE_DATABASES: "shop_db,history_db"
+      PPOSTGRES_MULTIPLE_DATABASES: "shop_db,history_db,users_db"
     ports:
       - "5432:5432"
     volumes:
@@ -20,8 +20,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
-    logging:
-      driver: "none" # Отключаем логирование в Docker
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
 
   inventory-service:
     build: ./inventory-service
@@ -44,8 +44,6 @@ services:
     depends_on:
       - postgres
       - rabbitmq
-    volumes:
-      - ./prisma:/app/prisma
 
 volumes:
   postgres_data:

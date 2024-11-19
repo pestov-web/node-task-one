@@ -17,7 +17,5 @@ RUN apk add --no-cache netcat-openbsd
 # Указываем порт и команду запуска
 EXPOSE 3011
 
-# CMD ["node", "src/app.js"]
-
 # Скрипт ожидания RabbitMQ с использованием nc
 CMD while ! nc -z rabbitmq 5672; do sleep 1; done && node src/app.js
