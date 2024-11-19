@@ -2,13 +2,14 @@ const amqp = require("amqplib");
 const { saveToHistory } = require("./saveToHistory");
 
 const RABBIT_URL = process.env.RABBITMQ_URL;
-const QUEUE_NAME = "inventory_changes";
+const QUEUE_NAME = process.env.QUEUE_NAME;
 async function startConsumer() {
   try {
     const connection = await amqp.connect(RABBIT_URL);
     const channel = await connection.createChannel();
 
     await channel.assertQueue(QUEUE_NAME, { durable: true });
+    console.log("Connected to RabbitMQ");
     console.log(`Waiting for messages in ${QUEUE_NAME}.`);
 
     channel.consume(

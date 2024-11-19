@@ -28,8 +28,12 @@ services:
     ports:
       - "3010:3010"
     environment:
-      DATABASE_URL: postgres://user:password@postgres:5432/shop_db
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: shop_db
     depends_on:
       - postgres
       - rabbitmq
@@ -39,8 +43,12 @@ services:
     ports:
       - "3011:3011"
     environment:
-      DATABASE_URL: postgres://user:password@postgres:5432/history_db
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: history_db
     depends_on:
       - postgres
       - rabbitmq
