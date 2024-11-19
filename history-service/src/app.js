@@ -1,7 +1,7 @@
 const express = require("express");
 const historyRoutes = require("./routes/historyRoutes");
 const db = require("./db");
-const { connectRabbitMQ } = require("./rabbitmqClient");
+const { startConsumer } = require("./rabbitmqClient");
 const { logger, errorLogger } = require("./middlewares/logger");
 const { errors } = require("celebrate");
 const errorsHandler = require("./middlewares/errorsHandler");
@@ -17,8 +17,6 @@ app.use(limiter);
 app.use(express.json());
 
 app.use("/history", historyRoutes);
-
-connectRabbitMQ();
 
 app.use(logger);
 app.use(errorLogger);
@@ -36,6 +34,9 @@ app.use(errors()); // Celebrate
 app.use(errorsHandler);
 
 const PORT = process.env.PORT || 3011;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`History service running on port ${PORT}`);
+  await startConsumer().then(() => {
+    console.log("RabbitMQ Consumer started.");
+  });
 });

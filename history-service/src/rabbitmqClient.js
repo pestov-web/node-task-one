@@ -1,59 +1,38 @@
 const amqp = require("amqplib");
 
-let channel;
+const RABBIT_URL = process.env.RABBITMQ_URL; // URL подключения к RabbitMQ
+const QUEUE_NAME = "inventory_changes"; // Имя очереди, которую слушаем
 
-const connectRabbitMQ = async () => {
+async function startConsumer() {
   try {
-    const connection = await amqp.connect(
-      process.env.RABBITMQ_URL || "amqp://guest:guest@rabbitmq:5672"
-    );
-    channel = await connection.createChannel();
-    await channel.assertQueue("inventory_changes", { durable: true });
+    const connection = await amqp.connect(RABBIT_URL);
+    const channel = await connection.createChannel();
+
+    await channel.assertQueue(QUEUE_NAME, { durable: true });
     console.log(
-      "Connected to RabbitMQ and queue 'inventory_changes' asserted."
+      ` [*] Waiting for messages in ${QUEUE_NAME}. Press CTRL+C to exit.`
     );
-  } catch (error) {
-    console.error("RabbitMQ connection error:", error);
-    process.exit(1);
-  }
-};
 
-/**
- * Прослушивание очереди "inventory_changes"
- * @param {function} onMessage - Callback функция для обработки сообщений
- */
-const consumeMessages = async (onMessage) => {
-  if (!channel) {
-    throw new Error(
-      "RabbitMQ channel is not initialized. Call connectRabbitMQ first."
-    );
-  }
+    channel.consume(
+      QUEUE_NAME,
+      (msg) => {
+        if (msg !== null) {
+          const messageContent = msg.content.toString();
+          console.log(` [x] Received message: ${messageContent}`);
 
-  try {
-    channel.consume("inventory_changes", async (msg) => {
-      if (msg !== null) {
-        const message = JSON.parse(msg.content.toString());
-        console.log("Received message from RabbitMQ:", message);
+          // Здесь можно обработать сообщение
+          const parsedData = JSON.parse(messageContent);
+          console.log("Processed data:", parsedData);
 
-        try {
-          await onMessage(message);
+          // Подтверждаем, что сообщение обработано
           channel.ack(msg);
-        } catch (error) {
-          console.error("Error processing message:", error);
-          channel.nack(msg, false, true); // Повторная попытка обработки
         }
-      }
-    });
-
-    console.log(
-      "Listening for messages from RabbitMQ queue 'inventory_changes'."
+      },
+      { noAck: false } // Включаем подтверждение обработки
     );
-  } catch (error) {
-    console.error("Error consuming messages:", error);
+  } catch (err) {
+    console.error("Error in RabbitMQ consumer:", err);
   }
-};
+}
 
-module.exports = {
-  connectRabbitMQ,
-  consumeMessages,
-};
+module.exports = { startConsumer };
