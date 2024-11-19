@@ -54,6 +54,17 @@ services:
     depends_on:
       - postgres
       - rabbitmq
-
+  user-service:
+    build: ./user-service
+    ports:
+      - "3012:3012"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: users_db
+    depends_on:
+      - postgres
 volumes:
   postgres_data:
