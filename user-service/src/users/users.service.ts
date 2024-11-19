@@ -19,7 +19,6 @@ export class UsersService {
       .returning('id')
       .execute();
 
-    // Возвращаем количество обновленных записей
     return result.affected || 0;
   }
 }
