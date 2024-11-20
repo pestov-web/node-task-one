@@ -65,26 +65,11 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
   - `id` (INT, PRIMARY KEY): Уникальный идентификатор магазина.
   - `name` (VARCHAR(255)): Название магазина.
 
-  ```sql
-  CREATE TABLE IF NOT EXISTS shops (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(255) NOT NULL
-  );
-  ```
-
 - **products**: Содержит информацию о продуктах.
 
   - `id` (INT, PRIMARY KEY): Уникальный идентификатор продукта.
   - `plu` (VARCHAR(50), UNIQUE): Уникальный код продукта.
   - `name` (VARCHAR(255)): Название продукта.
-
-  ```sql
-  CREATE TABLE IF NOT EXISTS products (
-      id SERIAL PRIMARY KEY,
-      plu VARCHAR(50) NOT NULL UNIQUE,
-      name VARCHAR(255) NOT NULL
-  );
-  ```
 
 - **stocks**: Хранит информацию о запасах продуктов в магазинах.
 
@@ -93,17 +78,6 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
   - `shop_id` (INT): Идентификатор магазина (ссылается на `shops.id`).
   - `shelf_quantity` (INT): Количество продукта на полке.
   - `order_quantity` (INT): Количество продукта в заказах.
-
-  ```sql
-  CREATE TABLE IF NOT EXISTS stocks (
-      id SERIAL PRIMARY KEY,
-      plu VARCHAR(50) REFERENCES products(plu) ON DELETE CASCADE,
-      shop_id INTEGER REFERENCES shops(id) ON DELETE CASCADE,
-      shelf_quantity INTEGER DEFAULT 0,
-      order_quantity INTEGER DEFAULT 0,
-      UNIQUE (plu, shop_id)
-  );
-  ```
 
 ---
 
@@ -120,20 +94,6 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
   - `shelf_quantity` (INT, DEFAULT 0): Количество на полке после изменения.
   - `order_quantity` (INT, DEFAULT 0): Количество в заказах после изменения.
   - `created_at` (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP): Дата и время изменения.
-
-  ```sql
-  CREATE TABLE IF NOT EXISTS history (
-      id SERIAL PRIMARY KEY,
-      plu VARCHAR(50) NOT NULL,
-      shop_id INTEGER DEFAULT 0,
-      action VARCHAR(50) NOT NULL,
-      shelf_quantity INTEGER DEFAULT 0,
-      order_quantity INTEGER DEFAULT 0,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  );
-  ```
-
----
 
 ---
 
