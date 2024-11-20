@@ -35,8 +35,8 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
 1. Клонируйте репозиторий:
 
    ```bash
-   git clone https://github.com/your-repository.git
-   cd your-repository
+   git clone https://github.com/pestov-web/node-task-one.git
+   cd node-task-one
    ```
 
 2. Соберите и запустите сервисы с помощью Docker Compose:
@@ -158,6 +158,4 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
 
 ---
 
-## Тестирование
-
-### От Автора =)
+## От Автора =)
