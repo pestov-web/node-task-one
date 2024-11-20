@@ -1,0 +1,19 @@
+datasource db {
+  provider = "postgresql"  // Используем PostgreSQL
+  url      = env("DATABASE_URL")  // Подключение через переменную окружения DATABASE_URL
+}
+
+generator client {
+  provider = "prisma-client-js"  // Генерация Prisma Client для работы с базой данных
+}
+
+model users {
+  id         Int      @id @default(autoincrement())  // Уникальный идентификатор, автоинкремент
+  firstName  String   // Имя пользователя
+  lastName   String   // Фамилия пользователя
+  age        Int      // Возраст пользователя
+  gender     String   // Пол пользователя
+  hasProblems Boolean  // Флаг наличия проблем (например, с аккаунтом)
+  createdAt  DateTime @default(now())  // Время создания записи
+  updatedAt  DateTime @updatedAt  // Время последнего обновления записи
+}
