@@ -43,14 +43,15 @@ const changeStock = async (req, res, next, operation) => {
       operation === "increase"
         ? await StockModel.increase(plu, shopId, shelfQuantity, orderQuantity)
         : await StockModel.decrease(plu, shopId, shelfQuantity, orderQuantity);
-    await sendMessage({
-      plu,
-      shopId,
-      action: `Stock ${operation}d`,
-      shelfQuantity,
-      orderQuantity,
-    });
+
     if (result.length) {
+      await sendMessage({
+        plu,
+        shopId,
+        action: `Stock ${operation}d`,
+        shelfQuantity,
+        orderQuantity,
+      });
       return res.status(200).json({
         status: "success",
         message: `Stock ${operation}d successfully`,

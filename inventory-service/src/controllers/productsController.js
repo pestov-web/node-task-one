@@ -5,11 +5,11 @@ exports.createProduct = async (req, res, next) => {
   const { plu, name } = req.body;
   try {
     const product = await ProductModel.create(plu, name);
-    await sendMessage({
-      plu: product[0].plu,
-      action: "Product created",
-    });
     if (product.length) {
+      await sendMessage({
+        plu: product[0].plu,
+        action: "Product created",
+      });
       return res.status(201).json({
         status: "success",
         message: "Product created successfully",
