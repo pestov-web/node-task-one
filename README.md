@@ -1,8 +1,19 @@
 # Демонстрация работы
 
-- inventory-service [https://inventory.pestov-web.ru/](https://inventory.pestov-web.ru/)
-- history-service [https://history.pestov-web.ru](https://history.pestov-web.ru)
-- users-service [https://users.pestov-web.ru](https://users.pestov-web.ru)
+- inventory-service
+
+* GET / POST [https://inventory.pestov-web.ru/products](https://inventory.pestov-web.ru/products)
+* GET / POST [https://inventory.pestov-web.ru/stocks](https://inventory.pestov-web.ru/stocks)
+* PATCH [https://inventory.pestov-web.ru/stocks/increase](https://inventory.pestov-web.ru/stocks/increase)
+* PATCH [https://inventory.pestov-web.ru/stocks/decrease](https://inventory.pestov-web.ru/stocks/decrease)
+
+- history-service
+
+* GET [https://history.pestov-web.ru/history](https://history.pestov-web.ru/history)
+
+- users-service
+
+* POST [https://users.pestov-web.ru/users/reset-issues](https://users.pestov-web.ru/users/reset-issues)
 
 # Обзор проекта
 
