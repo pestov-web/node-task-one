@@ -97,6 +97,21 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
 
 ---
 
+### 3. **user-service**: База данных для логирования изменений инвентаря
+
+#### Таблица
+
+- **history**: Хранит информацию о пользователях.
+
+  - `id` (INT, PRIMARY KEY): Уникальный идентификатор записи.
+  - `firstName` (VARCHAR(50)): Имя пользователя.
+  - `lastName` (VARCHAR(50)): Фамилия пользователя.
+  - `age` (INT, DEFAULT 0): Возраст пользователя.
+  - `gender` (VARCHAR(50)): Пол пользователя.
+  - `hasIssues` (BOOLEAN): Есть ли у пользователя проблемы.
+
+---
+
 ## API Эндпоинты
 
 ### 1. **inventory-service**
@@ -151,6 +166,20 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
 
 ---
 
+### 3. **user-service**
+
+#### `/users/reset-issues`
+
+- **POST**: Меняет значение `hasIssues` на True у всех пользователей и возвращает количество измененых значений .
+  - **Пример ответа**:
+    `json
+{
+    "affectedUsers": 1234
+}
+    `
+
+---
+
 ## Взаимодействие сервисов
 
 1. **inventory-service** отправляет сообщения в RabbitMQ, когда продукт создается или уровни запасов обновляются.
@@ -159,3 +188,5 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
 ---
 
 ## От Автора =)
+
+Не имел опыта в работе с Nest, лишнего на подобии валидаций и хельметов решил не делать, тк не заню как правильно.

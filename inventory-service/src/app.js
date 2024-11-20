@@ -9,22 +9,15 @@ const cors = require("cors");
 const helmet = require("helmet");
 const limiter = require("./middlewares/rateLimitter");
 const { connectRabbitMQ } = require("./rabbitmqClient");
-const LEGAL_CORS = [
-  "http://localhost:3000",
-  "http://localhost:3001",
-  "http://127.0.0.1:3000",
-  "http://127.0.0.1:3001",
-  "http://127.0.0.1",
-];
 
 const app = express();
 
-app.use(
-  cors({
-    origin: LEGAL_CORS,
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: LEGAL_CORS,
+//     credentials: true,
+//   })
+// );
 
 app.use(helmet());
 
