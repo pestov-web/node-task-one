@@ -1,19 +1,19 @@
 # Демонстрация работы
 
-- inventory-service
+## inventory-service
 
-* GET / POST [https://inventory.pestov-web.ru/products](https://inventory.pestov-web.ru/products)
-* GET / POST [https://inventory.pestov-web.ru/stocks](https://inventory.pestov-web.ru/stocks)
-* PATCH [https://inventory.pestov-web.ru/stocks/increase](https://inventory.pestov-web.ru/stocks/increase)
-* PATCH [https://inventory.pestov-web.ru/stocks/decrease](https://inventory.pestov-web.ru/stocks/decrease)
+- GET / POST [https://inventory.pestov-web.ru/products](https://inventory.pestov-web.ru/products)
+- GET / POST [https://inventory.pestov-web.ru/stocks](https://inventory.pestov-web.ru/stocks)
+- PATCH [https://inventory.pestov-web.ru/stocks/increase](https://inventory.pestov-web.ru/stocks/increase)
+- PATCH [https://inventory.pestov-web.ru/stocks/decrease](https://inventory.pestov-web.ru/stocks/decrease)
 
-- history-service
+## history-service
 
-* GET [https://history.pestov-web.ru/history](https://history.pestov-web.ru/history)
+- GET [https://history.pestov-web.ru/history](https://history.pestov-web.ru/history)
 
-- users-service
+## users-service
 
-* POST [https://users.pestov-web.ru/users/reset-issues](https://users.pestov-web.ru/users/reset-issues)
+- POST [https://users.pestov-web.ru/users/reset-issues](https://users.pestov-web.ru/users/reset-issues)
 
 # Обзор проекта
 
