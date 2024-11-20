@@ -45,7 +45,36 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
    docker-compose up --build
    ```
 
-3. Сервисы будут доступны на следующих портах:
+3. Создайте базы данных и при необходимости наполните данными.
+
+- перейдите в корень проекта
+
+* создайте базы и таблицы для сервисов history и inventory
+  ```bash
+  psql -h localhost -p 5432 -U user -d postgres -f init_schema.sql
+  ```
+* заполните базы демо данными при необходимости
+  ```bash
+  psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
+  ```
+  - перейдите в папку user-service
+* выполните миграцию для сервиса user
+  ```bash
+  npx prisma migrate dev --name init
+  ```
+* сгенирируйте библиотеки клиента для вашей архитектуры
+
+  ```bash
+  npx prisma generate
+  ```
+
+  - заполните базу пользователями
+
+  ```bash
+   npx ts-node prisma/seed.ts
+  ```
+
+4. Сервисы будут доступны на следующих портах:
    - `user-service`: `3012`
    - `inventory-service`: `3010`
    - `history-service`: `3011`
