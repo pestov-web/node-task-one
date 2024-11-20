@@ -182,6 +182,19 @@
     }
     ```
 
+#### `/stocks/increase  /stock/decrease`
+
+- **PATCH**: Увеличить или уменьшить остатки.
+  - **Тело запроса**:
+    ```json
+    {
+      "shopId": 1,
+      "plu": "000111",
+      "shelfQuantity": 1,
+      "orderQuantity": 12
+    }
+    ```
+
 ---
 
 ### 2. **history-service**
