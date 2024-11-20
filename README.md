@@ -1,3 +1,9 @@
+# Демонстрация работы
+
+- inventory-service [https://inventory.pestov-web.ru/](https://inventory.pestov-web.ru/)
+- history-service [https://history.pestov-web.ru](https://history.pestov-web.ru)
+- users-service [https://users.pestov-web.ru](https://users.pestov-web.ru)
+
 # Обзор проекта
 
 Этот проект состоит из трех сервисов, каждый из которых выполняет определенные задачи, связанные с управлением инвентарем магазина и историей изменений. Сервисы взаимодействуют друг с другом с использованием RabbitMQ для асинхронного обмена сообщениями и PostgreSQL для хранения данных. Ниже приведен обзор каждого сервиса, его структуры базы данных и доступных эндпоинтов.
