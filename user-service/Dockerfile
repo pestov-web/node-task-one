@@ -14,11 +14,6 @@ COPY . .
 # Устанавливаем netcat
 RUN apk add --no-cache netcat-openbsd
 
-# Prisma
-RUN npx prisma migrate dev --name init
-RUN npx prisma generate
-RUN npx ts-node prisma/seed.ts
-
 # Собираем приложение
 RUN npm run build
 
