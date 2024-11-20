@@ -56,11 +56,14 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
 
 ## Структуры баз данных
 
-### 1. **База данных inventory-service**
+### 1. **inventory-service**: База данных для управления продуктами и запасами
 
 #### Таблицы
 
-- **shops**: Хранит данные о магазинах.
+- **shops**: Содержит информацию о магазинах.
+
+  - `id` (INT, PRIMARY KEY): Уникальный идентификатор магазина.
+  - `name` (VARCHAR(255)): Название магазина.
 
   ```sql
   CREATE TABLE IF NOT EXISTS shops (
@@ -69,7 +72,11 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
   );
   ```
 
-- **products**: Хранит данные о продуктах.
+- **products**: Содержит информацию о продуктах.
+
+  - `id` (INT, PRIMARY KEY): Уникальный идентификатор продукта.
+  - `plu` (VARCHAR(50), UNIQUE): Уникальный код продукта.
+  - `name` (VARCHAR(255)): Название продукта.
 
   ```sql
   CREATE TABLE IF NOT EXISTS products (
@@ -79,7 +86,14 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
   );
   ```
 
-- **stocks**: Хранит данные о запасах продуктов в магазинах.
+- **stocks**: Хранит информацию о запасах продуктов в магазинах.
+
+  - `id` (INT, PRIMARY KEY): Уникальный идентификатор записи.
+  - `plu` (VARCHAR(50)): Код продукта (ссылается на `products.plu`).
+  - `shop_id` (INT): Идентификатор магазина (ссылается на `shops.id`).
+  - `shelf_quantity` (INT): Количество продукта на полке.
+  - `order_quantity` (INT): Количество продукта в заказах.
+
   ```sql
   CREATE TABLE IF NOT EXISTS stocks (
       id SERIAL PRIMARY KEY,
@@ -91,11 +105,22 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
   );
   ```
 
-### 2. **База данных history-service**
+---
+
+### 2. **history-service**: База данных для логирования изменений инвентаря
 
 #### Таблица
 
-- **history**: Логирует изменения инвентаря.
+- **history**: Логирует изменения инвентаря в магазинах.
+
+  - `id` (INT, PRIMARY KEY): Уникальный идентификатор записи.
+  - `plu` (VARCHAR(50)): Код продукта.
+  - `shop_id` (INT, DEFAULT 0): Идентификатор магазина.
+  - `action` (VARCHAR(50)): Действие, которое привело к изменению (например, "Stock increased").
+  - `shelf_quantity` (INT, DEFAULT 0): Количество на полке после изменения.
+  - `order_quantity` (INT, DEFAULT 0): Количество в заказах после изменения.
+  - `created_at` (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP): Дата и время изменения.
+
   ```sql
   CREATE TABLE IF NOT EXISTS history (
       id SERIAL PRIMARY KEY,
@@ -107,6 +132,8 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
   ```
+
+---
 
 ---
 
@@ -173,10 +200,4 @@ psql -h localhost -p 5432 -U user -d postgres -f seed_shop.sql
 
 ## Тестирование
 
-### Юнит-тесты
-
-Каждый сервис оснащен юнит-тестами для проверки корректности работы API эндпоинтов. Чтобы запустить тесты:
-
-```bash
-npm run test
-```
+### От Автора =)
